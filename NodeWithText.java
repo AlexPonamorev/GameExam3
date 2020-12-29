@@ -91,7 +91,8 @@ public enum NodeWithText {
     /**
      *   элемент данного перечисления - Node - будет состоять из трех полей
      *   text
-     *   rightAnswer
+     *   textRightSolution
+     *   textWrongSolution
      *   wrongAnswer
      * */
     private String nodeDescription;
