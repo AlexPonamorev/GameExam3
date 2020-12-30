@@ -11,10 +11,9 @@ public class Game implements Serializable {
     private NodeFunctionalOfGame  nodeFuncGame;
     private transient final int COUNT = 13;
     private final static long serialVersionUID = 1L;
-    //private GameNode node;
+
 
     public Game() {
-        //nodeFuncGameHere = null;
         // инициализация шагов в игре
         // id при инициализации - 0
         for (int i = 0; i < COUNT; i++) {
