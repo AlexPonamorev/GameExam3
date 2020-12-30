@@ -8,12 +8,13 @@ import java.util.Objects;
 public class Game implements Serializable {
 
     private List<NodeFunctionalOfGame> nodeFunctionalList = new ArrayList<>();
-    private NodeFunctionalOfGame nodeFuncGameHere = null;
+    private NodeFunctionalOfGame  nodeFuncGame;
     private transient final int COUNT = 13;
     private final static long serialVersionUID = 1L;
     //private GameNode node;
 
     public Game() {
+        //nodeFuncGameHere = null;
         // инициализация шагов в игре
         // id при инициализации - 0
         for (int i = 0; i < COUNT; i++) {
@@ -51,23 +52,24 @@ public class Game implements Serializable {
     }
 
     public void start() throws IOException {
-        NodeFunctionalOfGame nodeFunctionalOfGame;
+        NodeFunctionalOfGame nodeFunctionalCurrent;
 
-        if (Objects.isNull(this.nodeFuncGameHere)) {
-            nodeFunctionalOfGame = nodeFunctionalList.get(0);
-        } else nodeFunctionalOfGame = this.nodeFuncGameHere;
+        if (Objects.isNull(this.nodeFuncGame)) { // если игра только началась
+            nodeFunctionalCurrent = nodeFunctionalList.get(0);
+        } else nodeFunctionalCurrent = this.nodeFuncGame;
         String usersChoice = "";
 
         // пока решения правильные
-        while (Objects.nonNull(nodeFunctionalOfGame.getLinkNextSolutionOne())) {
-            System.out.println(Objects.nonNull(nodeFunctionalOfGame.getLinkNextSolutionOne()));
+        while (Objects.nonNull(nodeFunctionalCurrent.getLinkNextSolutionOne())) {
+            System.out.println(Objects.nonNull(nodeFunctionalCurrent.getLinkNextSolutionOne()));
             // считать пользовательский ввод
-            usersChoice = inputProcessing(nodeFunctionalOfGame);
+            usersChoice = inputProcessing(nodeFunctionalCurrent);
             if (usersChoice.startsWith("1") || usersChoice.startsWith("2")) {
-                nodeFunctionalOfGame = makeChoice(usersChoice, nodeFunctionalOfGame);
+                // установка ссылки на новую игровую ноду
+                nodeFunctionalCurrent = makeLinkOfNextNode(usersChoice,nodeFunctionalCurrent);
             } else if (usersChoice.contains("сохранить")) {
                 //
-                this.nodeFuncGameHere = nodeFunctionalOfGame;
+                this.nodeFuncGame = nodeFunctionalCurrent;
                 saveGame();
                 System.out.println("Игра сохранена");
                 break;
@@ -77,7 +79,7 @@ public class Game implements Serializable {
             }
         }
         if (!usersChoice.equalsIgnoreCase("сохранить"))
-            System.out.println(nodeFunctionalOfGame.getNode().getNodeDescription());
+            System.out.println(nodeFunctionalCurrent.getNode().getNodeDescription());
     }
 
     private void saveGame() throws IOException {
@@ -103,14 +105,14 @@ public class Game implements Serializable {
         return input.readLine(); // считать ввод с клавиатуры
     }
 
-    private NodeFunctionalOfGame makeChoice(String userChoice, NodeFunctionalOfGame nodeFunctionalOfGame) {
+    private NodeFunctionalOfGame makeLinkOfNextNode(String userChoice, NodeFunctionalOfGame nodeFuncGameHere) {
        NodeFunctionalOfGame linkToNextNode = null;
 
             if (userChoice.startsWith("1"))
-            linkToNextNode =   nodeFunctionalOfGame.getLinkNextSolutionOne();
+            linkToNextNode =  nodeFuncGameHere.getLinkNextSolutionOne();
 
             if (userChoice.startsWith("2"))
-                linkToNextNode =  nodeFunctionalOfGame.getLinkNextSolutionTwo();
+                linkToNextNode =  nodeFuncGameHere.getLinkNextSolutionTwo();
             return linkToNextNode;
     }
 
